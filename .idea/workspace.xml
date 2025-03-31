@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="4010b624-6bff-414d-81c6-1770c5cd2a56" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/.classpath" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/.project" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/build/built-jar.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/build/classes/rescueframework/MainFrame.form" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/dist/README.TXT" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/images/chair10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/images/chair11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/images/chair12.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/images/chair13.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/images/chair20.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/images/chair21.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/images/chair22.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/images/chair23.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/images/chair30.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/images/chair31.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/images/chair32.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/images/chair33.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/images/desk10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/images/desk11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/images/desk12.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/images/desk13.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/images/junk10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/images/junk20.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/images/patient-dead.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/images/patient.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/images/robot1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/images/robot2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/images/sofa10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/images/sofa11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/images/sofa12.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/images/sofa13.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/images/sofa20.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/images/sofa21.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/images/sofa22.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/images/sofa23.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/manifest.mf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/maps/Default.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/settings.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/src/rescueagents/RobotControl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/src/rescueframework/AbstractRobotControl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/src/rescueframework/MainFrame.form" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/src/rescueframework/MainFrame.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/src/rescueframework/PaintPanel.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/src/rescueframework/RescueFramework.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/src/rescueframework/Settings.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/src/rescueframework/StepThread.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/src/world/AStarCell.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/src/world/AStarSearch.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/src/world/Cell.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/src/world/Floor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/src/world/Injured.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/src/world/Map.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/src/world/Path.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/src/world/Robot.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/src/world/RobotPercepcion.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/src/world_debug/ViewLine.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RescueFramework/src/world_debug/ViewLineBreakPoint.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="2v63u6yiEesUmPedjOFroYUsHk3" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/RescueFramework" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4010b624-6bff-414d-81c6-1770c5cd2a56" name="Changes" comment="" />
+      <created>1743451915851</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1743451915851</updated>
+      <workItem from="1743451918118" duration="442000" />
+      <workItem from="1743452393754" duration="132000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+</project>

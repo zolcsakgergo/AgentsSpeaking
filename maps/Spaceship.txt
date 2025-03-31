@@ -1,0 +1,363 @@
+// Map size
+30 20
+
+// Cell borders
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+. . 9 1 1 1 1 3 . . . . . . . . . . . . . . 9 1 1 1 1 3 . .
+. . 8 . . . . . 3 1 1 1 3 1 1 1 3 1 1 1 3 1 . . . . . 2 . .
+. . 8 . . . . . 2 . . . 2 . . . 2 . . . 2 . . . . . . 2 . .
+. . 8 . . . . . 2 . . . 2 . . . 2 . . . 2 . . . . . . 2 . .
+. . 8 . . . . . 2 4 4 _ 6 4 _ 4 6 4 _ 4 6 . . . . . . 2 . .
+. . C 4 4 4 4 _ 6 . . . . . . . . . . . . C _ 4 4 4 4 6 . .
+. . . . 8 . . . . . . . . . . . . . . . . . . . . 2 . . . .
+. . . X _ . . . . . . . . . . . . . . . . . . . . _ X . . .
+. . . . 8 . . . . . . . . . . . . . . . . . . . . 3 . . . .
+. . . . 9 1 _ 9 _ 1 3 . . . . . . . . 9 1 _ 3 _ 1 3 . . . .
+. . 9 1 . . . 8 . . 2 . . . . . . . . 8 . . 2 . . . 1 3 . .
+. . 8 . . . . 8 . . 2 . . . . . . . . 8 . . 2 . . . . 2 . .
+. . 8 . . . . 8 . . 2 . . . . . . . . 8 . . 2 . . . . 2 . .
+. . 8 . . . . 8 . . 2 4 4 4 _ _ 4 4 4 8 . . 2 . . . . 2 . .
+. . 8 . . . . 8 . . 2 . . . X X . . . 8 . . 2 . . . . 2 . .
+. . C 4 4 4 4 C 4 4 6 . . . . . . . . c 4 4 4 C 4 4 4 6 . .
+. . . . . . . . . . . . . . S . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+
+// World objects
+
+// Floors
+// Bridge (Cockpit)
+Floor 6 10 1
+
+// Mess Hall/Kitchen (Left)
+Floor 3 3 0
+
+// Mess Hall/Kitchen (Right)
+Floor 10 4 0
+
+// Cargo Bay
+Floor 14 4 0
+
+// Armory
+Floor 18 4 0
+
+// Med Bay
+Floor 22 4 0
+
+// Science Lab
+Floor 6 15 0
+
+// Crew Quarters
+Floor 10 15 0
+
+// Escape Pods
+Floor 21 15 0
+
+// Observation Deck
+Floor 24 15 0
+
+// Obstacles
+// Room 1
+Obstacle 2 2 sofa22
+Obstacle 3 2 sofa12
+Obstacle 4 2 junk10
+Obstacle 5 2 junk10
+Obstacle 6 2 desk11
+Obstacle 7 2 desk13
+Obstacle 2 4 desk12
+Obstacle 2 5 desk10
+Obstacle 5 3 junk10
+Obstacle 6 3 junk10
+Obstacle 5 4 junk10
+Obstacle 4 4 chair13
+Obstacle 4 6 chair11 
+Obstacle 4 7 desk11
+Obstacle 5 7 desk13
+Obstacle 8 6 desk11
+Obstacle 8 5 chair33
+Obstacle 7 3 chair10
+
+// Room 2
+Obstacle 9 3 desk12
+Obstacle 9 4 desk10
+Obstacle 11 4 desk11
+Obstacle 12 4 desk13
+Obstacle 12 3 chair12
+Obstacle 9 5 sofa11
+Obstacle 9 6 sofa21
+Obstacle 9 2 junk10
+
+
+// Room 3
+Obstacle 16 5 desk12
+Obstacle 16 6 desk10
+Obstacle 13 4 desk11
+Obstacle 14 4 desk13
+Obstacle 13 6 chair30
+Obstacle 19 1 junk10
+Obstacle 20 2 junk10
+
+// Room 4
+Obstacle 18 3 desk12
+Obstacle 18 4 desk10
+Obstacle 17 3 chair12
+Obstacle 19 6 sofa10
+Obstacle 20 6 sofa20
+Obstacle 14 3 chair11
+Obstacle 17 6 chair30
+Obstacle 20 3 chair33
+Obstacle 20 4 chair33
+
+// Room 5
+Obstacle 2 12 desk12
+Obstacle 2 13 desk10
+Obstacle 6 14 desk12
+Obstacle 6 15 desk10
+Obstacle 22 4 desk11
+Obstacle 23 4 desk13
+Obstacle 25 4 desk11
+Obstacle 26 4 desk13
+Obstacle 26 7 desk11
+Obstacle 27 7 desk13
+Obstacle 21 3 chair31
+Obstacle 23 3 chair32
+Obstacle 25 3 chair32
+Obstacle 26 3 chair32
+Obstacle 27 6 chair33
+Obstacle 24 7 chair30
+Obstacle 25 7 chair30
+Obstacle 22 5 chair30
+Obstacle 23 7 junk10
+Obstacle 27 2 junk10
+Obstacle 27 3 junk10
+
+
+// Room 6
+Obstacle 7 11 desk12
+Obstacle 7 12 desk10
+Obstacle 2 17 desk11
+Obstacle 3 17 desk13
+Obstacle 4 11 desk11
+Obstacle 5 11 desk13
+Obstacle 3 13 chair10
+Obstacle 5 14 chair13
+Obstacle 3 16 chair10
+Obstacle 5 17 sofa10
+Obstacle 6 17 sofa20
+Obstacle 2 16 junk10
+Obstacle 2 15 junk10
+Obstacle 5 16 junk10
+Obstacle 6 16 junk10
+Obstacle 3 12 junk10
+
+// Room 7
+Obstacle 9 13 desk11
+Obstacle 10 13 desk13
+Obstacle 9 14 desk11
+Obstacle 10 14 desk13
+Obstacle 9 12 chair12
+Obstacle 8 15 chair10
+Obstacle 10 16 chair10
+Obstacle 7 17 sofa10
+Obstacle 8 17 sofa20
+
+// Room 8
+Obstacle 19 12 desk12
+Obstacle 19 13 desk10
+Obstacle 21 15 desk11
+Obstacle 22 15 desk13
+Obstacle 22 16 chair23
+Obstacle 19 16 chair21
+Obstacle 20 12 chair20
+Obstacle 19 17 sofa10
+Obstacle 20 17 sofa20
+
+// Room 9
+Obstacle 27 12 desk12
+Obstacle 27 13 desk10
+Obstacle 23 15 desk12
+Obstacle 23 16 desk10
+Obstacle 24 11 desk11
+Obstacle 25 11 desk13
+Obstacle 26 17 desk11
+Obstacle 27 17 desk13
+Obstacle 24 15 chair23
+Obstacle 25 12 chair23
+Obstacle 26 12 chair22
+Obstacle 27 16 chair23
+Obstacle 23 13 junk10
+Obstacle 23 14 junk10
+Obstacle 27 14 junk10
+
+// Hall
+Obstacle 14 11 desk11
+Obstacle 15 11 desk13
+Obstacle 13 9 desk12
+Obstacle 13 10 desk10
+Obstacle 16 9 desk12
+Obstacle 16 10 desk10
+Obstacle 14 9 chair10
+Obstacle 15 10 chair11
+Obstacle 11 15 chair30
+Obstacle 12 15 chair30
+Obstacle 13 15 chair30
+Obstacle 11 12 chair31
+Obstacle 11 13 chair31
+Obstacle 18 13 chair33
+Obstacle 18 14 chair33
+Obstacle 18 15 chair33
+Obstacle 9 7 junk10
+Obstacle 8 8 junk10
+Obstacle 9 8 junk10
+Obstacle 10 8 junk10
+Obstacle 16 7 junk10
+Obstacle 17 7 junk10
+Obstacle 16 8 junk10
+Obstacle 17 8 junk10
+Obstacle 15 7 junk10
+Obstacle 14 10 junk10
+Obstacle 22 10 junk10
+
+// Outside
+Obstacle 27 8 junk10
+Obstacle 2 10 junk10
+Obstacle 3 11 junk10
+
+
+// Fire locations - using Injured keyword which gets converted to Fire
+// Free spaces in Mess Hall
+Injured 3 3 800
+Injured 3 4 750
+Injured 3 5 650
+Injured 4 3 550
+
+// Desk fires - desks are not obstacles, robots can move on them
+Injured 6 2 950  // desk11
+Injured 7 2 920  // desk13
+Injured 2 4 890  // desk12
+Injured 2 5 750  // desk10
+Injured 4 7 850  // desk11
+Injured 5 7 800  // desk13
+Injured 8 6 880  // desk11
+
+// Bridge Area Fires - open spaces
+Injured 12 10 920
+Injured 12 11 880
+Injured 15 13 770
+Injured 13 12 730
+Injured 14 12 680
+
+// Desk fires in Bridge
+Injured 13 9 830  // desk12
+Injured 13 10 820  // desk10
+Injured 14 11 850  // desk11
+Injured 15 11 830  // desk13
+Injured 16 9 810  // desk12
+Injured 16 10 790  // desk10
+
+// Cargo Bay Fires - open spaces
+Injured 14 2 950
+Injured 15 2 900
+Injured 17 4 880
+Injured 16 3 830
+Injured 15 5 800
+
+// Desk fires in Cargo Bay
+Injured 13 4 970  // desk11
+Injured 14 4 920  // desk13
+Injured 16 5 940  // desk12
+Injured 16 6 880  // desk10
+
+// Armory Fires - open spaces
+Injured 18 2 850
+Injured 19 4 840
+Injured 19 5 830
+Injured 20 5 820
+Injured 21 4 810
+
+// Desk fires in Armory
+Injured 18 3 920  // desk12
+Injured 18 4 900  // desk10
+
+// Med Bay Fires - open spaces
+Injured 23 5 900
+Injured 24 3 880
+Injured 24 5 830
+Injured 26 5 820
+Injured 25 6 800
+
+// Desk fires in Med Bay
+Injured 22 4 945  // desk11
+Injured 23 4 925  // desk13
+Injured 25 4 910  // desk11
+Injured 26 4 890  // desk13
+Injured 26 7 870  // desk11
+Injured 27 7 850  // desk13
+
+// Science Lab Fires - open spaces
+Injured 3 14 870
+Injured 4 13 840
+Injured 4 14 820
+Injured 5 15 760
+Injured 6 13 730
+
+// Desk fires in Science Lab
+Injured 2 12 920  // desk12
+Injured 2 13 900  // desk10
+Injured 6 14 890  // desk12
+Injured 6 15 870  // desk10
+
+// Crew Quarters Fires - open spaces
+Injured 8 13 930
+Injured 8 14 900
+Injured 11 14 880
+Injured 11 16 830
+Injured 12 16 800
+
+// Desk fires in Crew Quarters
+Injured 9 13 950  // desk11
+Injured 10 13 930  // desk13
+Injured 9 14 910  // desk11
+Injured 10 14 890  // desk13
+
+// Escape Pods Fires - open spaces
+Injured 20 14 800
+Injured 20 16 780
+Injured 21 14 750
+Injured 21 16 730
+Injured 19 15 720
+
+// Desk fires in Escape Pods
+Injured 19 12 890  // desk12
+Injured 19 13 870  // desk10
+Injured 21 15 920  // desk11
+Injured 22 15 900  // desk13
+
+// Observation Deck Fires - open spaces
+Injured 24 12 860
+Injured 24 14 840
+Injured 25 13 820
+Injured 25 15 780
+Injured 26 15 750
+
+// Desk fires in Observation Deck
+Injured 27 12 920  // desk12
+Injured 27 13 900  // desk10
+Injured 23 15 880  // desk12
+Injured 23 16 860  // desk10
+Injured 24 11 930  // desk11
+Injured 25 11 910  // desk13
+Injured 26 17 890  // desk11
+Injured 27 17 870  // desk13
+
+// Corridor Fires - open spaces only (avoiding junk obstacles)
+Injured 11 7 850
+Injured 11 9 830
+Injured 13 7 810
+Injured 13 11 790
+Injured 15 6 770
+Injured 18 8 750
+Injured 18 9 730
+Injured 18 10 710
+Injured 18 11 690
