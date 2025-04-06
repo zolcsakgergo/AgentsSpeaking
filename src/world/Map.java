@@ -160,8 +160,13 @@ public class Map implements RobotPercepcion {
             startCell = getCell(0, 0);
         Cell nextStartCell = startCell;
         for (int i = 0; i < robotCount; i++) {
-            Robot newRobot = new Robot(nextStartCell, this);
-            robots.add(newRobot);
+            // Create a pair of robots (firefighter and cleaner) for each increment
+            Robot newFirefighter = new Robot(nextStartCell, this, false);
+            robots.add(newFirefighter);
+            nextStartCell = nextStartCell.getAccessibleNeigbour(1);
+
+            Robot newCleaner = new Robot(nextStartCell, this, true);
+            robots.add(newCleaner);
             nextStartCell = nextStartCell.getAccessibleNeigbour(1);
         }
 
@@ -312,14 +317,23 @@ public class Map implements RobotPercepcion {
             return false;
         }
 
-        // Avoid obstacles
-        if (cell.hasObstacle()) {
+        // Avoid obstacles (except for cleaner robots on junk)
+        if (cell.hasObstacle()
+                && !(robot.getImage().equals("wallee_trash") && cell.getObstacleImage().startsWith("junk"))) {
             RescueFramework.log("Move failed: " + cell.getX() + " x " + cell.getY() + " is occupied by an obstacle.");
             return false;
         }
 
         // Change location
         robot.setCell(cell);
+
+        // If it's a cleaner robot and it's on junk, clean it
+        if (robot.getImage().equals("wallee_trash") && cell.getObstacleImage().startsWith("junk")) {
+            RescueFramework.log("Cleaner robot cleaning junk at " + cell.getX() + " x " + cell.getY());
+            cell.setObstacleImage(""); // Remove the junk
+            // Force GUI refresh to show the cleaned cell
+            RescueFramework.refresh();
+        }
 
         // Extinguish fire if present and active
         if (cell.hasFire() && cell.getFire().isActive()) {

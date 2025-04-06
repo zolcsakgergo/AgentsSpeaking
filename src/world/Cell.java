@@ -251,22 +251,20 @@ public class Cell {
     }
 
     /**
-     * Returns true if the cell has an obstacle on it
+     * Return true if the cell has an obstacle
      * 
-     * @return True if the cell has an obstacle on it
+     * @return True if the cell has an obstacle
      */
     public boolean hasObstacle() {
-        // Check if obstacle exists (not empty string)
-        if (obstacleImage.isEmpty()) {
+        // Allow stepping on junk cells (they will be cleaned by the cleaner robot)
+        if (obstacleImage.startsWith("junk")) {
             return false;
         }
-
         // Desks are not obstacles - robots can move on them
         if (obstacleImage.startsWith("desk")) {
             return false;
         }
-
-        return true;
+        return !obstacleImage.isEmpty();
     }
 
     /**

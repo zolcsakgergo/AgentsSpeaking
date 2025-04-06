@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.io.File;
 
 /**
  * Static class for reading and writing settings to the settings.txt file
@@ -81,6 +82,11 @@ public class Settings {
      */
     public static void save() {
         try {
+            // Create RescueFramework directory if it doesn't exist
+            File dir = new File("RescueFramework");
+            if (!dir.exists()) {
+                dir.mkdir();
+            }
             properties.store(new FileOutputStream("RescueFramework/settings.txt"), null);
         } catch (IOException e) {
             e.printStackTrace();

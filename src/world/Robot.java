@@ -1,5 +1,6 @@
 package world;
 
+import rescueagents.CleanerControl;
 import rescueagents.RobotControl;
 import rescueframework.AbstractRobotControl;
 
@@ -16,15 +17,25 @@ public class Robot {
     // The control object of th robot
     private AbstractRobotControl control;
 
+    // The image to display for the robot
+    private String image;
+
     /**
      * Default constructor
      * 
      * @param startCell  The start cell of the robot
      * @param percepcion Percepcion of the robot
+     * @param isCleaner  True if this robot should be a cleaner
      */
-    public Robot(Cell startCell, RobotPercepcion percepcion) {
+    public Robot(Cell startCell, RobotPercepcion percepcion, boolean isCleaner) {
         location = startCell;
-        control = new RobotControl(this, percepcion);
+        if (isCleaner) {
+            control = new CleanerControl(this, percepcion);
+            image = "wallee_trash";
+        } else {
+            control = new RobotControl(this, percepcion);
+            image = "robot1";
+        }
     }
 
     /**
@@ -95,5 +106,14 @@ public class Robot {
         if (control == null)
             return null;
         return control.step();
+    }
+
+    /**
+     * Get the image to display for this robot
+     * 
+     * @return The image filename
+     */
+    public String getImage() {
+        return image;
     }
 }

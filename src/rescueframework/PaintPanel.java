@@ -152,9 +152,9 @@ public class PaintPanel extends JPanel {
             Robot robot = map.getRobots().get(i);
             int x = robot.getLocation().getX();
             int y = robot.getLocation().getY();
-            g2.drawImage(map.getCachedImage("robot1"), x * cellSize + 1, y * cellSize + 1, cellSize - 1, cellSize - 1,
+            g2.drawImage(map.getCachedImage(robot.getImage()), x * cellSize + 1, y * cellSize + 1, cellSize - 1,
+                    cellSize - 1,
                     null);
-
         }
 
         // Draw cell grid above all
