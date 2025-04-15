@@ -160,14 +160,66 @@ public class Map implements RobotPercepcion {
             startCell = getCell(0, 0);
         Cell nextStartCell = startCell;
         for (int i = 0; i < robotCount; i++) {
-            // Create a pair of robots (firefighter and cleaner) for each increment
-            Robot newFirefighter = new Robot(nextStartCell, this, false);
-            robots.add(newFirefighter);
-            nextStartCell = nextStartCell.getAccessibleNeigbour(1);
+            try {
+                // Create a pair of robots (firefighter and cleaner) for each increment
+                Robot newFirefighter = new Robot(nextStartCell, this, false);
+                robots.add(newFirefighter);
 
-            Robot newCleaner = new Robot(nextStartCell, this, true);
-            robots.add(newCleaner);
-            nextStartCell = nextStartCell.getAccessibleNeigbour(1);
+                // Make sure we have a valid next position
+                Cell nextPos = nextStartCell.getAccessibleNeigbour(1);
+                if (nextPos == null) {
+                    // Try different directions if this one is blocked
+                    for (int dir = 0; dir < 4; dir++) {
+                        nextPos = nextStartCell.getAccessibleNeigbour(dir);
+                        if (nextPos != null)
+                            break;
+                    }
+
+                    // If still null, create a fallback position
+                    if (nextPos == null) {
+                        RescueFramework.log(
+                                "Warning: No accessible neighbor found for robot placement. Using fallback position.");
+                        // Find any valid cell
+                        for (int x = 0; x < width; x++) {
+                            for (int y = 0; y < height; y++) {
+                                if (cells[x][y] != null && !cells[x][y].hasObstacle()) {
+                                    nextPos = cells[x][y];
+                                    break;
+                                }
+                            }
+                            if (nextPos != null)
+                                break;
+                        }
+
+                        // Last resort
+                        if (nextPos == null)
+                            nextPos = startCell;
+                    }
+                }
+                nextStartCell = nextPos;
+
+                Robot newCleaner = new Robot(nextStartCell, this, true);
+                robots.add(newCleaner);
+
+                // Make sure we have a valid next position
+                nextPos = nextStartCell.getAccessibleNeigbour(1);
+                if (nextPos == null) {
+                    // Try different directions if this one is blocked
+                    for (int dir = 0; dir < 4; dir++) {
+                        nextPos = nextStartCell.getAccessibleNeigbour(dir);
+                        if (nextPos != null)
+                            break;
+                    }
+
+                    // If still null, use the current position
+                    if (nextPos == null)
+                        nextPos = nextStartCell;
+                }
+                nextStartCell = nextPos;
+            } catch (Exception e) {
+                RescueFramework.log("Error creating robots: " + e.getMessage());
+                e.printStackTrace();
+            }
         }
 
         // Update agent visibility and repaint GUI
@@ -189,13 +241,32 @@ public class Map implements RobotPercepcion {
                 File imageFile = new File("RescueFramework/images/" + image + ".png");
                 if (!imageFile.exists()) {
                     imageFile = new File("images/" + image + ".png");
+                    if (!imageFile.exists()) {
+                        imageFile = new File("src/images/" + image + ".png");
+                        if (!imageFile.exists()) {
+                            // Try looking in the src/RescueFramework/images folder
+                            imageFile = new File("src/RescueFramework/images/" + image + ".png");
+                        }
+                    }
                 }
+
+                if (!imageFile.exists()) {
+                    RescueFramework.log("WARNING: Image not found: " + image + ".png");
+                    // Return a small empty image to avoid NPE
+                    BufferedImage emptyImg = new BufferedImage(10, 10, BufferedImage.TYPE_INT_ARGB);
+                    imageCache.put(image, emptyImg);
+                    return emptyImg;
+                }
+
                 BufferedImage img = ImageIO.read(imageFile);
                 imageCache.put(image, img);
                 return img;
             } catch (IOException ex) {
                 ex.printStackTrace();
-                return null;
+                // Return a small empty image to avoid NPE
+                BufferedImage emptyImg = new BufferedImage(10, 10, BufferedImage.TYPE_INT_ARGB);
+                imageCache.put(image, emptyImg);
+                return emptyImg;
             }
         } else {
             // Image found in the cache

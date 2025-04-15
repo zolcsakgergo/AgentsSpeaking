@@ -1,0 +1,15 @@
+/* 
+   RescueRobots Project
+   Multi-agent system with firefighter and cleaner robots
+*/
+
+MAS rescue_robots {
+    environment: RescueEnvironment
+    
+    agents:
+        firefighter firefighter.asl;
+        cleaner cleaner.asl;
+        
+    classpath: "src";
+    aslSourcePath: ".";
+} 
