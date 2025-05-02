@@ -1,8 +1,0 @@
-agent_count=2
-height=800
-left=0
-map=Spaceship.txt
-maximized=1
-speed=100
-top=0
-width=1200

@@ -1,9 +1,0 @@
-#Tue Apr 15 22:18:01 CEST 2025
-top=0
-left=0
-maximized=1
-width=1200
-map=Spaceship.txt
-agent_count=4
-speed=100
-height=800

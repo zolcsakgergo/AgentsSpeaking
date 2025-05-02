@@ -1,0 +1,280 @@
+import jason.asSyntax.*;
+import jason.environment.Environment;
+import jason.environment.grid.GridWorldModel;
+import jason.environment.grid.GridWorldView;
+import jason.environment.grid.Location;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.util.Random;
+import java.util.logging.Logger;
+import java.util.Map;
+import java.util.HashMap;
+
+public class RescueEnv extends Environment {
+
+    public static final int GSize = 20; // grid size
+    public static final int FIRE = 16; // fire code in grid model
+    public static final int JUNK = 32; // junk code in grid model
+    public static final int UNKN = 64; // unknown area code
+
+    static Logger logger = Logger.getLogger(RescueEnv.class.getName());
+
+    private RescueModel model;
+    private RescueView  view;
+
+    @Override
+    public void init(String[] args) {
+        model = new RescueModel();
+        view  = new RescueView(model);
+        model.setView(view);
+        updatePercepts();
+    }
+
+    @Override
+    public boolean executeAction(String ag, Structure action) {
+        logger.info(ag + " doing: " + action);
+        try {
+            if (action.getFunctor().equals("move_towards")) {
+                int x = (int)((NumberTerm)action.getTerm(0)).solve();
+                int y = (int)((NumberTerm)action.getTerm(1)).solve();
+                model.moveTowards(ag, x, y);
+            } else if (action.getFunctor().equals("reduce_intensity")) {
+                int amount = 200;
+                if (action.getArity() > 0) {
+                    amount = (int)((NumberTerm)action.getTerm(0)).solve();
+                }
+                model.reduceIntensity(ag, amount);
+            } else if (action.getFunctor().equals("clean_junk")) {
+                model.cleanJunk(ag);
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        updatePercepts();
+
+        try {
+            Thread.sleep(100);
+        } catch (Exception e) {}
+        informAgsEnvironmentChanged();
+        return true;
+    }
+
+    /** creates the agents perception based on the model */
+    void updatePercepts() {
+        clearPercepts();
+
+        // Add positions of agents
+        Location firefighterLoc = model.getAgPos(0);
+        Location cleanerLoc = model.getAgPos(1);
+
+        Literal pos1 = Literal.parseLiteral("pos(firefighter," + firefighterLoc.x + "," + firefighterLoc.y + ")");
+        Literal pos2 = Literal.parseLiteral("pos(cleaner," + cleanerLoc.x + "," + cleanerLoc.y + ")");
+
+        // Add position percepts to both agents
+        addPercept("firefighter", pos1);
+        addPercept("firefighter", pos2);
+        addPercept("cleaner", pos1);
+        addPercept("cleaner", pos2);
+
+        // Add fires, junk and unknown areas
+        for (int x = 0; x < GSize; x++) {
+            for (int y = 0; y < GSize; y++) {
+                Location loc = new Location(x, y);
+                if (model.hasObject(FIRE, loc)) {
+                    int intensity = model.getFireIntensity(loc);
+                    Literal fire = Literal.parseLiteral("fire(" + x + "," + y + "," + intensity + ")");
+                    addPercept("firefighter", fire);
+                }
+                if (model.hasObject(JUNK, loc)) {
+                    String junkType = model.getJunkType(loc);
+                    Literal junk = Literal.parseLiteral("obstacle(" + x + "," + y + ",\"" + junkType + "\")");
+                    addPercept("cleaner", junk);
+                }
+                if (model.hasObject(UNKN, loc)) {
+                    Literal unknown = Literal.parseLiteral("unknown(" + x + "," + y + ")");
+                    addPercept("firefighter", unknown);
+                    addPercept("cleaner", unknown);
+                }
+            }
+        }
+    }
+
+    class RescueModel extends GridWorldModel {
+        private Map<Location, Integer> fireIntensities = new HashMap<>();
+        private Map<Location, String> junkTypes = new HashMap<>();
+        private Random random = new Random(System.currentTimeMillis());
+
+        private RescueModel() {
+            super(GSize, GSize, 2);
+
+            // initial location of agents
+            try {
+                setAgPos(0, 0, 0); // firefighter at top-left
+                setAgPos(1, GSize-1, GSize-1); // cleaner at bottom-right
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            // Add some fires to start with
+            addFire(3, 4, 500);
+            addFire(15, 7, 800);
+            addFire(10, 15, 600);
+
+            // Add some junk
+            addJunk(5, 7, "junk10");
+            addJunk(12, 3, "junk20");
+            addJunk(8, 16, "junk10");
+
+            // Add some unknown areas
+            for (int i = 0; i < 10; i++) {
+                int x = random.nextInt(GSize);
+                int y = random.nextInt(GSize);
+                add(UNKN, x, y);
+            }
+        }
+
+        void addFire(int x, int y, int intensity) {
+            add(FIRE, x, y);
+            fireIntensities.put(new Location(x, y), intensity);
+        }
+
+        void addJunk(int x, int y, String type) {
+            add(JUNK, x, y);
+            junkTypes.put(new Location(x, y), type);
+        }
+
+        int getFireIntensity(Location loc) {
+            Integer intensity = fireIntensities.get(loc);
+            return intensity != null ? intensity : 0;
+        }
+
+        String getJunkType(Location loc) {
+            String type = junkTypes.get(loc);
+            return type != null ? type : "junk10";
+        }
+
+        void moveTowards(String ag, int x, int y) throws Exception {
+            int agId = ag.equals("firefighter") ? 0 : 1;
+            Location loc = getAgPos(agId);
+            
+            if (loc.x < x) loc.x++;
+            else if (loc.x > x) loc.x--;
+            
+            if (loc.y < y) loc.y++;
+            else if (loc.y > y) loc.y--;
+            
+            setAgPos(agId, loc);
+
+            // Discover area around agent
+            discoverArea(loc, 2);
+        }
+
+        void discoverArea(Location center, int radius) {
+            for (int x = center.x - radius; x <= center.x + radius; x++) {
+                for (int y = center.y - radius; y <= center.y + radius; y++) {
+                    if (x >= 0 && x < GSize && y >= 0 && y < GSize) {
+                        Location loc = new Location(x, y);
+                        if (hasObject(UNKN, loc)) {
+                            remove(UNKN, loc);
+                        }
+                    }
+                }
+            }
+        }
+
+        void reduceIntensity(String ag, int amount) {
+            if (ag.equals("firefighter")) {
+                Location loc = getAgPos(0);
+                if (hasObject(FIRE, loc)) {
+                    Integer intensity = fireIntensities.get(loc);
+                    if (intensity != null) {
+                        intensity -= amount;
+                        if (intensity <= 0) {
+                            remove(FIRE, loc);
+                            fireIntensities.remove(loc);
+                        } else {
+                            fireIntensities.put(loc, intensity);
+                        }
+                    }
+                }
+            }
+        }
+
+        void cleanJunk(String ag) {
+            if (ag.equals("cleaner")) {
+                Location loc = getAgPos(1);
+                if (hasObject(JUNK, loc)) {
+                    remove(JUNK, loc);
+                    junkTypes.remove(loc);
+                }
+            }
+        }
+    }
+
+    class RescueView extends GridWorldView {
+        public RescueView(RescueModel model) {
+            super(model, "Rescue World", 600);
+            defaultFont = new Font("Arial", Font.BOLD, 12);
+            setVisible(true);
+            repaint();
+        }
+
+        /** draw application objects */
+        @Override
+        public void draw(Graphics g, int x, int y, int object) {
+            switch (object) {
+                case RescueEnv.FIRE:
+                    drawFire(g, x, y);
+                    break;
+                case RescueEnv.JUNK:
+                    drawJunk(g, x, y);
+                    break;
+                case RescueEnv.UNKN:
+                    drawUnknown(g, x, y);
+                    break;
+            }
+        }
+
+        @Override
+        public void drawAgent(Graphics g, int x, int y, Color c, int id) {
+            String label = id == 0 ? "FF" : "CL";
+            c = id == 0 ? Color.red : Color.blue;
+            
+            super.drawAgent(g, x, y, c, -1);
+            g.setColor(Color.white);
+            super.drawString(g, x, y, defaultFont, label);
+        }
+
+        public void drawFire(Graphics g, int x, int y) {
+            g.setColor(Color.orange);
+            g.fillRect(x * cellSizeW + 2, y * cellSizeH + 2, cellSizeW - 4, cellSizeH - 4);
+            
+            RescueModel rm = (RescueModel)model;
+            int intensity = rm.getFireIntensity(new Location(x, y));
+            g.setColor(Color.white);
+            drawString(g, x, y, defaultFont, "F" + intensity);
+        }
+
+        public void drawJunk(Graphics g, int x, int y) {
+            g.setColor(Color.darkGray);
+            g.fillRect(x * cellSizeW + 2, y * cellSizeH + 2, cellSizeW - 4, cellSizeH - 4);
+            
+            RescueModel rm = (RescueModel)model;
+            String type = rm.getJunkType(new Location(x, y));
+            g.setColor(Color.white);
+            drawString(g, x, y, defaultFont, type);
+        }
+
+        public void drawUnknown(Graphics g, int x, int y) {
+            g.setColor(Color.lightGray);
+            g.fillRect(x * cellSizeW + 1, y * cellSizeH + 1, cellSizeW - 2, cellSizeH - 2);
+            g.setColor(Color.black);
+            drawString(g, x, y, defaultFont, "?");
+        }
+    }
+} 
