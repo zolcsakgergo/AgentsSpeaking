@@ -8,6 +8,5 @@ MAS rescue_robots {
         firefighter;
         cleaner;
 
-    classpath: ".";
     aslSourcePath: ".";
 } 

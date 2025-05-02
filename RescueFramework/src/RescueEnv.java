@@ -18,6 +18,7 @@ public class RescueEnv extends Environment {
     public static final int FIRE = 16; // fire code in grid model
     public static final int JUNK = 32; // junk code in grid model
     public static final int UNKN = 64; // unknown area code
+    public static final int OBSTACLE = 128; // obstacle code in grid model
 
     static Logger logger = Logger.getLogger(RescueEnv.class.getName());
 
@@ -35,33 +36,45 @@ public class RescueEnv extends Environment {
     @Override
     public boolean executeAction(String ag, Structure action) {
         logger.info(ag + " doing: " + action);
+        boolean result = false;
+        
         try {
             if (action.getFunctor().equals("move_towards")) {
                 int x = (int)((NumberTerm)action.getTerm(0)).solve();
                 int y = (int)((NumberTerm)action.getTerm(1)).solve();
                 model.moveTowards(ag, x, y);
+                result = true;
             } else if (action.getFunctor().equals("reduce_intensity")) {
                 int amount = 200;
                 if (action.getArity() > 0) {
                     amount = (int)((NumberTerm)action.getTerm(0)).solve();
                 }
                 model.reduceIntensity(ag, amount);
+                result = true;
             } else if (action.getFunctor().equals("clean_junk")) {
                 model.cleanJunk(ag);
-            } else {
-                return false;
+                result = true;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        updatePercepts();
-
-        try {
-            Thread.sleep(100);
-        } catch (Exception e) {}
-        informAgsEnvironmentChanged();
-        return true;
+        if (result) {
+            updatePercepts();
+            
+            try {
+                Thread.sleep(100);
+            } catch (Exception e) {}
+            
+            // Update the view once all changes are done
+            if (view != null) {
+                view.repaint();
+            }
+            
+            informAgsEnvironmentChanged();
+        }
+        
+        return result;
     }
 
     /** creates the agents perception based on the model */
@@ -158,20 +171,112 @@ public class RescueEnv extends Environment {
             return type != null ? type : "junk10";
         }
 
+        // Check if location is free for movement
+        public boolean isFree(Location loc) {
+            return loc.x >= 0 && loc.x < GSize && 
+                   loc.y >= 0 && loc.y < GSize && 
+                   !hasObject(OBSTACLE, loc);
+        }
+        
+        // Enhanced version of isFree that checks agent-specific restrictions
+        public boolean isFree(Location loc, int agId) {
+            // Basic boundary checks
+            if (loc.x < 0 || loc.x >= GSize || loc.y < 0 || loc.y >= GSize) {
+                return false;
+            }
+            
+            // Check for obstacles
+            if (hasObject(OBSTACLE, loc)) {
+                return false;
+            }
+            
+            // For firefighter (agId 0), junk is an obstacle
+            if (agId == 0 && hasObject(JUNK, loc)) {
+                return false;
+            }
+            
+            // For cleaner (agId 1), fire is an obstacle
+            if (agId == 1 && hasObject(FIRE, loc)) {
+                return false;
+            }
+            
+            // Check if another agent is already at this location
+            for (int i = 0; i < 2; i++) { // We know we have exactly 2 agents
+                if (i != agId && getAgPos(i) != null && getAgPos(i).equals(loc)) {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+
         void moveTowards(String ag, int x, int y) throws Exception {
             int agId = ag.equals("firefighter") ? 0 : 1;
             Location loc = getAgPos(agId);
+            Location oldLoc = new Location(loc.x, loc.y); // Remember old location
             
-            if (loc.x < x) loc.x++;
-            else if (loc.x > x) loc.x--;
+            // Calculate direction
+            int dx = 0;
+            int dy = 0;
             
-            if (loc.y < y) loc.y++;
-            else if (loc.y > y) loc.y--;
+            if (loc.x < x) dx = 1;
+            else if (loc.x > x) dx = -1;
             
-            setAgPos(agId, loc);
+            if (loc.y < y) dy = 1;
+            else if (loc.y > y) dy = -1;
+            
+            // Try to move in both directions
+            boolean moved = false;
+            
+            // First try: move in both directions if possible
+            Location newLoc = new Location(loc.x + dx, loc.y + dy);
+            if (isFree(newLoc, agId)) {
+                setAgPos(agId, newLoc);
+                moved = true;
+            } else {
+                // Second try: move horizontally
+                newLoc = new Location(loc.x + dx, loc.y);
+                if (dx != 0 && isFree(newLoc, agId)) {
+                    setAgPos(agId, newLoc);
+                    moved = true;
+                } else {
+                    // Third try: move vertically
+                    newLoc = new Location(loc.x, loc.y + dy);
+                    if (dy != 0 && isFree(newLoc, agId)) {
+                        setAgPos(agId, newLoc);
+                        moved = true;
+                    }
+                }
+            }
+            
+            // If we couldn't move at all, try a random direction to break out of potential deadlock
+            if (!moved && !loc.equals(oldLoc)) {
+                // Try random directions until one works or we've tried all options
+                int[][] directions = {{1,0}, {-1,0}, {0,1}, {0,-1}};
+                // Shuffle directions
+                Random r = new Random();
+                for(int i = 0; i < directions.length; i++) {
+                    int j = r.nextInt(directions.length);
+                    int[] temp = directions[i];
+                    directions[i] = directions[j];
+                    directions[j] = temp;
+                }
+                
+                for(int[] dir : directions) {
+                    newLoc = new Location(loc.x + dir[0], loc.y + dir[1]);
+                    if (isFree(newLoc, agId)) {
+                        setAgPos(agId, newLoc);
+                        moved = true;
+                        break;
+                    }
+                }
+            }
 
-            // Discover area around agent
-            discoverArea(loc, 2);
+            // Discover area around agent regardless of movement
+            discoverArea(getAgPos(agId), 2);
+            
+            // Do NOT repaint here - let the main execution loop handle repainting
+            // to avoid flickering caused by too many repaints
         }
 
         void discoverArea(Location center, int radius) {
@@ -217,10 +322,17 @@ public class RescueEnv extends Environment {
     }
 
     class RescueView extends GridWorldView {
+        private final RescueModel env;
+
         public RescueView(RescueModel model) {
             super(model, "Rescue World", 600);
+            this.env = model;
             defaultFont = new Font("Arial", Font.BOLD, 12);
             setVisible(true);
+            repaint();
+        }
+
+        public void update() {
             repaint();
         }
 
@@ -254,8 +366,7 @@ public class RescueEnv extends Environment {
             g.setColor(Color.orange);
             g.fillRect(x * cellSizeW + 2, y * cellSizeH + 2, cellSizeW - 4, cellSizeH - 4);
             
-            RescueModel rm = (RescueModel)model;
-            int intensity = rm.getFireIntensity(new Location(x, y));
+            int intensity = env.getFireIntensity(new Location(x, y));
             g.setColor(Color.white);
             drawString(g, x, y, defaultFont, "F" + intensity);
         }
@@ -264,8 +375,7 @@ public class RescueEnv extends Environment {
             g.setColor(Color.darkGray);
             g.fillRect(x * cellSizeW + 2, y * cellSizeH + 2, cellSizeW - 4, cellSizeH - 4);
             
-            RescueModel rm = (RescueModel)model;
-            String type = rm.getJunkType(new Location(x, y));
+            String type = env.getJunkType(new Location(x, y));
             g.setColor(Color.white);
             drawString(g, x, y, defaultFont, type);
         }
