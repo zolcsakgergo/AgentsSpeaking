@@ -1,67 +1,47 @@
-// Firefighter agent
 
-/* Initial beliefs */
 at(P) :- pos(P,X,Y) & pos(firefighter,X,Y).
-// Track already extinguished fires to avoid loops
-extinguished_fires([]).
-// Track visited positions to detect movement loops
-visited_positions([]).
-debug(true).
 
-// Check if position was visited to detect loops
-visited(X, Y) :- visited(L) & .member(pos(X,Y), L).
+fire(3, 4, 500).
+fire(15, 7, 800).
+fire(10, 15, 600).
 
-// Unreachable check
-unreachable(X, Y) :- unreachable(pos(X,Y)).
-
-/* Initial goals */
 !extinguish_fires.
 
-/* Plans */
 
-// Main plan to search for and extinguish fires
-+!extinguish_fires : debug(true)
-   <- .print("[DEBUG] Starting firefighter mission with debugging");
-      // Force immediate exploration to confirm movement works
-      !explore_immediately;
-      !find_fires.
-
-// Main plan without debugging
-+!extinguish_fires : not debug(true)
-   <- .print("Starting firefighter mission");
-      !find_fires.
-
-// Extra plan to verify the agent can move
-+!explore_immediately
-   <- .print("[DEBUG] Forcing initial exploration to verify movement");
-      ?pos(firefighter,X,Y);
-      .print("[DEBUG] Current position: (", X, ", ", Y, ")");
-      // Move to center of grid
-      !go_to(10,10);
-      .print("[DEBUG] Reached center of grid, now searching for fires");
-      !scan_for_fires.
-
-// If we've found a fire, prioritize based on intensity and go extinguish it
-+!find_fires : active_fire(X,Y,I) & not unreachable(X,Y)
-   <- .print("[FF] Found fire at ", X, ", ", Y, " with intensity ", I);
++!extinguish_fires : fire(X,Y,I)
+   <- .print("Found fire at ", X, ", ", Y, " with intensity ", I);
       !go_to(X,Y);
-      !extinguish;
-      !find_fires.
+      reduce_intensity(100);
+      -fire(X, Y, I);
+      if(I > 0) {
+         +fire(X, Y, I - 100);
+      }
 
-// If we've only found unreachable fires, explore more
-+!find_fires : active_fire(X,Y,I) & unreachable(X,Y)
-   <- .print("[FF] Skipping unreachable fire at ", X, ", ", Y);
-      !explore_unknown;
-      !find_fires.
+      .wait(100);
+      !extinguish_fires.
 
-// If no active fire is perceived, explore to discover new areas
-+!find_fires : not active_fire(_,_,_)
-   <- .print("[FF] No active fires detected, exploring...");
-      !explore_unknown;
-      !scan_for_fires;
-      !find_fires.
++!extinguish_fires 
+   <- .print("There is nothing to extinguish");
+      .wait(2000);
+      !extinguish_fires.
 
-// Scan all visible fires to make sure we haven't missed any
++!go_to(X,Y) : pos(firefighter,X,Y)
+   <- .print("Already at target location ", X, ", ", Y);
+      .wait(100).
+
+
++!go_to(X,Y)
+   <- ?pos(firefighter,CX,CY);
+      .print("Moving from (", CX, ",", CY, ") towards (", X, ",", Y, ")");
+
+      move_towards(X,Y);
+
+
+      .wait(100);
+      !go_to(X,Y).
+
+
+/*
 +!scan_for_fires
    <- .print("[FF] Scanning for undetected fires");
       .findall(fire(FX,FY,FI), (fire(FX,FY,FI) & FI > 0), AllFires);
@@ -286,16 +266,16 @@ unreachable(X, Y) :- unreachable(pos(X,Y)).
 
 // Firefighter agent.
 
-/* Initial beliefs */
+
 visited([]).
 extinguished_fires([]).
 stuck_count(0).
 reset_tries(0).
 
-/* Initial goals */
+
 !extinguish_fires.
 
-/* Plans */
+
 +!extinguish_fires : true 
    <- .print("Starting firefighter mission");
       !find_fire.
@@ -417,3 +397,4 @@ reset_tries(0).
       .delete(pos(X,Y), OldEF, NewEF);
       -+extinguished_fires(NewEF);
       +active_fire(X,Y,I). 
+*/

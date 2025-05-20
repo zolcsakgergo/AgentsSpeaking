@@ -101,12 +101,12 @@ public class RescueEnv extends Environment {
                 if (model.hasObject(FIRE, loc)) {
                     int intensity = model.getFireIntensity(loc);
                     Literal fire = Literal.parseLiteral("fire(" + x + "," + y + "," + intensity + ")");
-                    addPercept("firefighter", fire);
+                    //addPercept("firefighter", fire);
                 }
                 if (model.hasObject(JUNK, loc)) {
                     String junkType = model.getJunkType(loc);
-                    Literal junk = Literal.parseLiteral("obstacle(" + x + "," + y + ",\"" + junkType + "\")");
-                    addPercept("cleaner", junk);
+                    Literal junk = Literal.parseLiteral("junk(" + x + "," + y + ",\"" + junkType + "\")");
+                    //addPercept("cleaner", junk);
                 }
                 if (model.hasObject(UNKN, loc)) {
                     Literal unknown = Literal.parseLiteral("unknown(" + x + "," + y + ")");
@@ -139,9 +139,10 @@ public class RescueEnv extends Environment {
             addFire(10, 15, 600);
 
             // Add some junk
-            addJunk(5, 7, "junk10");
-            addJunk(12, 3, "junk20");
-            addJunk(8, 16, "junk10");
+            addJunk(5, 7, "junk");
+            addJunk(12, 3, "junk");
+            addJunk(12, 7, "junk");
+            addJunk(8, 16, "junk");
 
             // Add some unknown areas
             for (int i = 0; i < 10; i++) {
